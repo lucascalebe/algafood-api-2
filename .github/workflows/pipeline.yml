@@ -15,7 +15,8 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
+  build-and-tests:
+    name: Build and Tests
     permissions: write-all
     runs-on: ubuntu-latest
 
