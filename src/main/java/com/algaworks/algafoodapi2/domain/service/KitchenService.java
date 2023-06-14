@@ -24,10 +24,10 @@ public class KitchenService {
       kitchenRepository.deleteById(kitchenId);
 
     } catch (EmptyResultDataAccessException e) {
-      throw new EntityNotFoundException(String.format("Kitchen with id: %d was not found", kitchenId));
+      throw new EntityNotFoundException(String.format("Kitchen with id %d was not found", kitchenId));
 
     } catch (DataIntegrityViolationException e) {
-      throw new EntityInUseException(String.format("Kitchen with id: %d can't be remove, because it's in use.", kitchenId));
+      throw new EntityInUseException(String.format("Kitchen with id %d can't be remove, because it's in use.", kitchenId));
     }
   }
 }
