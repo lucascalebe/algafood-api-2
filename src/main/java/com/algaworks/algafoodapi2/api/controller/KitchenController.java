@@ -4,9 +4,11 @@ import com.algaworks.algafoodapi2.domain.model.Kitchen;
 import com.algaworks.algafoodapi2.domain.repository.KitchenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,5 +64,21 @@ public class KitchenController {
     kitchenRepository.save(kitchen);
 
     return ResponseEntity.ok(kitchen);
+  }
+
+  @DeleteMapping("/{kitchenId}")
+  public ResponseEntity<Kitchen> remove(@PathVariable Long kitchenId) {
+    try {
+      Optional<Kitchen> kitchen = kitchenRepository.findById(kitchenId);
+
+      if (kitchen.isPresent()) {
+        kitchenRepository.deleteById(kitchenId);
+        return ResponseEntity.noContent().build();
+      }
+
+      return ResponseEntity.notFound().build();
+    } catch (DataIntegrityViolationException e) {
+      return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
   }
 }
