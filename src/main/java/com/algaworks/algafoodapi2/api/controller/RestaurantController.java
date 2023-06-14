@@ -1,16 +1,19 @@
 package com.algaworks.algafoodapi2.api.controller;
 
 import com.algaworks.algafoodapi2.domain.exception.EntityNotFoundException;
+import com.algaworks.algafoodapi2.domain.model.Kitchen;
 import com.algaworks.algafoodapi2.domain.model.Restaurant;
 import com.algaworks.algafoodapi2.domain.repository.RestaurantRepository;
 import com.algaworks.algafoodapi2.domain.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,6 +51,30 @@ public class RestaurantController {
 
       return ResponseEntity.status(HttpStatus.CREATED)
               .body(restaurantSaved);
+
+    } catch (EntityNotFoundException e) {
+      return ResponseEntity.badRequest()
+              .body(e.getMessage());
+    }
+  }
+
+  @PutMapping("/{restaurantId}")
+  public ResponseEntity<Object> atualizar(@PathVariable Long restaurantId,
+                                     @RequestBody Restaurant restaurantUpdated) {
+    try {
+      var restaurantOpt = restaurantRepository.findById(restaurantId);
+
+      if (restaurantOpt.isEmpty()) {
+        return ResponseEntity.notFound().build();
+      }
+
+      Restaurant restaurant = restaurantOpt.get();
+
+      BeanUtils.copyProperties(restaurantUpdated, restaurant, "id");
+
+      restaurant = restaurantService.save(restaurant);
+
+      return ResponseEntity.ok(restaurant);
 
     } catch (EntityNotFoundException e) {
       return ResponseEntity.badRequest()

@@ -2,7 +2,6 @@ package com.algaworks.algafoodapi2.domain.service;
 
 import com.algaworks.algafoodapi2.domain.exception.EntityInUseException;
 import com.algaworks.algafoodapi2.domain.exception.EntityNotFoundException;
-import com.algaworks.algafoodapi2.domain.model.Kitchen;
 import com.algaworks.algafoodapi2.domain.model.Restaurant;
 import com.algaworks.algafoodapi2.domain.repository.KitchenRepository;
 import com.algaworks.algafoodapi2.domain.repository.RestaurantRepository;

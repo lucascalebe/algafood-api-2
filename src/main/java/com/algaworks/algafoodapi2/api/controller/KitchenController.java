@@ -54,7 +54,7 @@ public class KitchenController {
 
   @PutMapping("/{kitchenId}")
   @ResponseStatus(HttpStatus.CREATED)
-  public ResponseEntity<Kitchen> addKitchen(@PathVariable Long kitchenId, @RequestBody Kitchen kitchenUpdated) {
+  public ResponseEntity<Kitchen> updateKitchen(@PathVariable Long kitchenId, @RequestBody Kitchen kitchenUpdated) {
     var kitchenOpt = kitchenRepository.findById(kitchenId);
 
     if (kitchenOpt.isEmpty()) {
