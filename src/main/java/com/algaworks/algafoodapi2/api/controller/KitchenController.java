@@ -2,6 +2,7 @@ package com.algaworks.algafoodapi2.api.controller;
 
 import com.algaworks.algafoodapi2.domain.model.Kitchen;
 import com.algaworks.algafoodapi2.domain.repository.KitchenRepository;
+import com.algaworks.algafoodapi2.domain.service.KitchenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,6 +28,7 @@ import java.util.Optional;
 public class KitchenController {
 
   private final KitchenRepository kitchenRepository;
+  private final KitchenService kitchenService;
 
   @GetMapping
   public List<Kitchen> kitchenList() {
@@ -47,13 +49,13 @@ public class KitchenController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public Kitchen addKitchen(@RequestBody Kitchen kitchen) {
-    return kitchenRepository.save(kitchen);
+    return kitchenService.save(kitchen);
   }
 
   @PutMapping("/{kitchenId}")
   @ResponseStatus(HttpStatus.CREATED)
   public ResponseEntity<Kitchen> addKitchen(@PathVariable Long kitchenId, @RequestBody Kitchen kitchenUpdated) {
-    Optional<Kitchen> kitchenOpt = kitchenRepository.findById(kitchenId);
+    var kitchenOpt = kitchenRepository.findById(kitchenId);
 
     if (kitchenOpt.isEmpty()) {
       return ResponseEntity.notFound().build();
@@ -69,7 +71,7 @@ public class KitchenController {
   @DeleteMapping("/{kitchenId}")
   public ResponseEntity<Kitchen> remove(@PathVariable Long kitchenId) {
     try {
-      Optional<Kitchen> kitchen = kitchenRepository.findById(kitchenId);
+      var kitchen = kitchenRepository.findById(kitchenId);
 
       if (kitchen.isPresent()) {
         kitchenRepository.deleteById(kitchenId);
