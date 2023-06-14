@@ -63,7 +63,7 @@ public class KitchenController {
 
     Kitchen kitchen = kitchenOpt.get();
     BeanUtils.copyProperties(kitchenUpdated, kitchen, "id");
-    kitchenRepository.save(kitchen);
+    kitchenService.save(kitchen);
 
     return ResponseEntity.ok(kitchen);
   }
