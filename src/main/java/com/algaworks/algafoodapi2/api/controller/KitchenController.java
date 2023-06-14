@@ -1,11 +1,12 @@
 package com.algaworks.algafoodapi2.api.controller;
 
+import com.algaworks.algafoodapi2.domain.exception.EntityInUseException;
+import com.algaworks.algafoodapi2.domain.exception.EntityNotFoundException;
 import com.algaworks.algafoodapi2.domain.model.Kitchen;
 import com.algaworks.algafoodapi2.domain.repository.KitchenRepository;
 import com.algaworks.algafoodapi2.domain.service.KitchenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/kitchens", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -71,15 +71,13 @@ public class KitchenController {
   @DeleteMapping("/{kitchenId}")
   public ResponseEntity<Kitchen> remove(@PathVariable Long kitchenId) {
     try {
-      var kitchen = kitchenRepository.findById(kitchenId);
+      kitchenService.delete(kitchenId);
+      return ResponseEntity.noContent().build();
 
-      if (kitchen.isPresent()) {
-        kitchenRepository.deleteById(kitchenId);
-        return ResponseEntity.noContent().build();
-      }
-
+    } catch (EntityNotFoundException e) {
       return ResponseEntity.notFound().build();
-    } catch (DataIntegrityViolationException e) {
+
+    } catch (EntityInUseException e) {
       return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
   }
